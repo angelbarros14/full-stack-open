@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Button from './Button'
-import Result from './Result'
 import Header from './Header'
+import Statistics from './Statistics'
 
 const App = () => {
   const [ good, setGood ] = useState(0)
@@ -9,20 +9,21 @@ const App = () => {
   const [ bad, setBad ] = useState(0)
 
   const setValueGood = newValue => () => {
-    console.log('value good', newValue)
+    // console.log('value good', newValue)
     setGood(newValue)
   }
 
   const setValueNeutral = newValue => () => {
-    console.log('value neutral', newValue)
+    // console.log('value neutral', newValue)
     setNeutral(newValue)
   }
 
   const setValueBad = newValue => () => {
-    console.log('value bad', newValue)
+    // console.log('value bad', newValue)
     setBad(newValue)
   }
 
+  let sum = good + bad + neutral
 
   return (
     <>
@@ -31,9 +32,11 @@ const App = () => {
       <Button onClick={setValueNeutral(neutral + 1)} text='neutral' />
       <Button onClick={setValueBad(bad + 1)} text='bad' />
       <Header header='Statistics' />
-      <Result text='good' result={good}/>
-      <Result text='neutral' result={neutral}/>
-      <Result text='bad' result={bad}/>
+      <Statistics text='good' result={good}/>
+      <Statistics text='neutral' result={neutral}/>
+      <Statistics text='bad' result={bad}/>
+      <Statistics text='average' result={((good * 1) + (neutral * 0) + (bad * -1)) / sum}/>
+      <Statistics text='positive' result={`${(good / sum) * 100}%`}/>
     </>
   )
 }
