@@ -1,6 +1,11 @@
 const Statistics = ({ text, result }) => {
     return (
-        <p>{text} {result}</p>
+        <tbody>
+            <tr>
+                <td>{text} </td>
+                <td>{result}</td>
+            </tr>
+        </tbody>
     )
 }
 

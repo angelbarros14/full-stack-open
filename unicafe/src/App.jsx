@@ -12,11 +12,13 @@ const StatisticsLine = ({ good, neutral, bad }) => {
   }
   return (
     <>
+    <table>
       <Statistics text='good' result={good}/>
       <Statistics text='neutral' result={neutral}/>
       <Statistics text='bad' result={bad}/>
       <Statistics text='average' result={((good * 1) + (neutral * 0) + (bad * -1)) / sum}/>
       <Statistics text='positive' result={`${(good / sum) * 100}%`}/>
+    </table>
     </>
   )
 }
