@@ -24,6 +24,8 @@ const App = () => {
   }
 
   let sum = good + bad + neutral
+  const average = sum == 0 ? 0 : ((good * 1) + (neutral * 0) + (bad * -1)) / sum
+  const positive = sum == 0 ? 0: `${(good / sum) * 100}%`
 
   return (
     <>
@@ -35,8 +37,8 @@ const App = () => {
       <Statistics text='good' result={good}/>
       <Statistics text='neutral' result={neutral}/>
       <Statistics text='bad' result={bad}/>
-      <Statistics text='average' result={((good * 1) + (neutral * 0) + (bad * -1)) / sum}/>
-      <Statistics text='positive' result={`${(good / sum) * 100}%`}/>
+      <Statistics text='average' result={average}/>
+      <Statistics text='positive' result={positive}/>
     </>
   )
 }
