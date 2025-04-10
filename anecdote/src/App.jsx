@@ -14,17 +14,33 @@ const App = () => {
   ]
 
   const [ selected, setSelected ] = useState(0)
+  // create an array that has the same length as anecdotes and fill it with zeroes
+  const [ votes, setVotes ] = useState(Array(anecdotes.length).fill(0))
 
-  const onClick = (newValue) => () => {
-    setSelected(newValue)
-    console.log(newValue)
-    
+  const voteClick = () => {
+    // create a copy of the votes array
+    const newVote = [...votes]
+    // increment the selected anecdote
+    newVote[selected] += 1
+    // set the updated state
+    setVotes(newVote)
+    console.log(newVote)
   }
 
+  const anecdoteClick = () => {
+    setSelected(Math.floor(Math.random() * anecdotes.length))
+  }
+ 
   return (
     <>
-      {anecdotes[selected]}
-      <Button onClick={onClick(selected + 1)} text='next anecdote' />
+      <div>
+        {anecdotes[selected]} {`has ${votes[selected]} votes`}
+      </div>
+      <div>
+        <Button onClick={voteClick} text='vote' />
+        <Button onClick={anecdoteClick} text='next anecdote' />
+      </div>
+      
     </>
   )
 }
