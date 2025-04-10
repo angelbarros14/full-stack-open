@@ -1,5 +1,24 @@
 import { useState } from 'react'
 import Button from './Button'
+import Header from './Header'
+
+const Highestvote = ({ votes, anecdotes }) => {
+  let max = Math.max(...votes)
+  // access the index of the anecdote that has the highest vote.
+  // anecdote index
+  // max (the highest vote)
+  let maxIndex = votes.indexOf(max)
+  console.log(maxIndex)
+  // console.log(max) 
+  if (max !== 0) {
+    return (
+      <>
+        <Header text='Anecdote with most votes' />
+        <p>{anecdotes[maxIndex]}</p>
+      </> 
+    )
+  }
+}
 
 const App = () => {
   const anecdotes = [
@@ -24,23 +43,21 @@ const App = () => {
     newVote[selected] += 1
     // set the updated state
     setVotes(newVote)
-    console.log(newVote)
+    // console.log(newVote)
   }
 
   const anecdoteClick = () => {
     setSelected(Math.floor(Math.random() * anecdotes.length))
   }
- 
+  
   return (
     <>
-      <div>
-        {anecdotes[selected]} {`has ${votes[selected]} votes`}
-      </div>
-      <div>
+        <Header text='Anecdote of the day'/>
+        <p>{anecdotes[selected]}</p>
+        <p>{`has ${votes[selected]} votes`}</p> 
         <Button onClick={voteClick} text='vote' />
         <Button onClick={anecdoteClick} text='next anecdote' />
-      </div>
-      
+        <Highestvote votes={votes} anecdotes={anecdotes}/>
     </>
   )
 }
