@@ -20,6 +20,7 @@ const Highestvote = ({ votes, anecdotes }) => {
   }
 }
 
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
