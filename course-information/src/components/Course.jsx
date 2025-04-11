@@ -2,17 +2,22 @@ import Header from "./Header"
 import Content from "./Content"
 import Total from "./Total"
 
-const Course = ({ course }) => {
-    {course.parts.reduce((sum, num) => sum + num.exercises, 0)}
+const Course = ({ courses }) => {
     return (
         <>
-            <Header course={course.name} />
-            {course.parts.map((part) => (
-            <div key={part.id}>
-            <Content part={part.name} exercise={part.exercises} />
-            </div>
+            {courses.map(course => (
+                <div key={course.id}>
+                    <Header course={course.name} />
+
+                    {course.parts.map(part => (
+                        <div key={part.id}>
+                            <Content part={part.name} exercise={part.exercises} />
+                        </div>
+                    ))}
+
+                    <Total course={course}/>
+                </div>
             ))}
-            <Total course={course}/>
         </>
             
     )

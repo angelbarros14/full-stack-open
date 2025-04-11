@@ -1,9 +1,7 @@
 const Total = ({ course }) => {
-    let totalAmount = course.parts.reduce((sum, num) => sum + num.exercises, 0)
-    console.log(totalAmount)
-    return (
-        <p>Number of exercises {totalAmount}</p>
-    )
-}
-
+    const totalSum = course.parts.reduce((sum, num) => sum + num.exercises, 0)
+    // access the course array's length
+        return (
+            <p>total of {totalSum} exercises</p>
+        )}
 export default Total
