@@ -1,4 +1,4 @@
-const Content = ({ part, exercise}) => {
+const Content = ({ part }) => {
     return (
       <p>
         {part} {exercise}
