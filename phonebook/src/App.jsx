@@ -21,20 +21,40 @@ const App = () => {
     const nameObject = {
       name: newName,
       number: newNumber
-    }
-
-    const found = persons.find((name) => name.name.trim().toLowerCase() === newName.trim().toLowerCase())
-    if (found) {
-      alert(`${newName} is already added to phonebook`)
-      return false
-    } 
-
+    }   
     
-    if (newName == '') {
+    if (newName === '') {
       alert('Please enter a name')
       return false
     }
 
+    const existing = existingName(newName, persons)
+    if (existing) {
+      updateNumber(existing)
+    } else {
+      addName(nameObject)
+    }
+  }
+
+  // add a function that checks if the name exist
+  const existingName = (newName, persons) => {
+    return persons.find((person) => person.name.trim().toLowerCase() === newName.trim().toLowerCase())
+  }
+
+  // add a function that confirms and update the existing number
+  const updateNumber = (person) => {
+    const id = person.id
+    const changedInfo = {...person, number: newNumber}
+
+    service 
+    .updateNumber(id, changedInfo)
+    .then(returnedNumber => {
+      setPersons(persons.map(person => person.id === id ? returnedNumber : person ))
+    })
+  }
+
+  // add a function that adds a new person to the list
+  const addName = (nameObject) => {
     service
     .create(nameObject)
     .then(returnedName => {
@@ -70,9 +90,6 @@ const App = () => {
     setFilterName(event.target.value)
   }
 
-  // access filter name:
-    // show the list depending on the filtered name
-    // access the persons list (?), and display the filtered names 
   const filter = persons.filter(person => person.name.toLowerCase().includes(filterName.toLowerCase().trim()))
 
   return (
