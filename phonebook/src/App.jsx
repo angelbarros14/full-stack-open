@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './component/Header'
+import service from './services/phonebook'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -7,12 +8,19 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterName, setFilterName ] = useState('')
 
+  useEffect(() => {
+    service
+    .getAll()
+    .then(initialNames => {
+      setPersons(initialNames)
+    })
+  }, [])
+
   const addInfo = (event) => {
     event.preventDefault()
     const nameObject = {
       name: newName,
-      number: newNumber,
-      id: Number(persons.length + 1)
+      number: newNumber
     }
 
     const found = persons.find((name) => name.name.trim().toLowerCase() === newName.trim().toLowerCase())
@@ -21,18 +29,22 @@ const App = () => {
       return false
     } 
 
+    
     if (newName == '') {
       alert('Please enter a name')
       return false
     }
 
-    console.log('before', persons)
-    setPersons(prev => prev.concat(nameObject))
-    setNewName('')
-    setNewNumber('')
-    // ***delay on printing updated state***
-    console.log('after', persons)
+    service
+    .create(nameObject)
+    .then(returnedName => {
+      setPersons(prev => prev.concat(returnedName))
+      setNewName('')
+      setNewNumber('')
+    })
   }
+
+
 
   const handleName = (event) => {
     setNewName(event.target.value)
@@ -48,8 +60,8 @@ const App = () => {
 
   // access filter name:
     // show the list depending on the filtered name
-    // access the persons list (?), and display the names 
-  const filter = persons.filter(person => person.name.includes(filterName.toLowerCase()))
+    // access the persons list (?), and display the filtered names 
+  const filter = persons.filter(person => person.name.toLowerCase().includes(filterName.toLowerCase().trim()))
 
   return (
     <div>
@@ -64,7 +76,9 @@ const App = () => {
         </div>
       </form>
       <Header text='Numbers' />
-      {filter.map(person => <div key={person.id}> {person.name} {person.number}</div>)}
+      {filter.map(person => <div key={person.id}> {person.name} {person.number}
+        <button type='submit'>delete</button>
+      </div>)}
     </div>
   )
 }
