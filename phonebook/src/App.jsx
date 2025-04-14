@@ -44,7 +44,19 @@ const App = () => {
     })
   }
 
-
+  const deleteInfo = (id, name) => {
+    // console.log('deleted')
+    if (confirm(`Delete ${name}?`)) {
+      service
+      .deleteName(id)
+      .then(() => {
+        setPersons(persons.filter(n => n.id !== id))
+      })
+    } else {
+      return false
+    }
+    
+  }
 
   const handleName = (event) => {
     setNewName(event.target.value)
@@ -76,8 +88,9 @@ const App = () => {
         </div>
       </form>
       <Header text='Numbers' />
+      
       {filter.map(person => <div key={person.id}> {person.name} {person.number}
-        <button type='submit'>delete</button>
+        <button type='submit' onClick={() => deleteInfo(person.id, person.name)}>delete</button>
       </div>)}
     </div>
   )
