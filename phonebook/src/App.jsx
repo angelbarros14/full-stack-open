@@ -30,7 +30,12 @@ const App = () => {
 
     const existing = existingName(newName, persons)
     if (existing) {
-      updateNumber(existing)
+      if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        updateNumber(existing)
+      } else {
+        reset()
+        return false
+      }
     } else {
       addName(nameObject)
     }
@@ -50,6 +55,7 @@ const App = () => {
     .updateNumber(id, changedInfo)
     .then(returnedNumber => {
       setPersons(persons.map(person => person.id === id ? returnedNumber : person ))
+      reset()
     })
   }
 
@@ -59,9 +65,13 @@ const App = () => {
     .create(nameObject)
     .then(returnedName => {
       setPersons(prev => prev.concat(returnedName))
-      setNewName('')
-      setNewNumber('')
+      reset()
     })
+  }
+
+  const reset = () => {
+    setNewName('')
+    setNewNumber('')
   }
 
   const deleteInfo = (id, name) => {
