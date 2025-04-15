@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import Header from './component/Header'
+import Notification from './component/Notification'
 import service from './services/phonebook'
+import './index.css'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterName, setFilterName ] = useState('')
+  const [ message, setMessage ] = useState(null)
 
   useEffect(() => {
     service
@@ -31,13 +34,13 @@ const App = () => {
     const existing = existingName(newName, persons)
     if (existing) {
       if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        updateNumber(existing)
+        updateNumber(existing, newName)
       } else {
         reset()
         return false
       }
     } else {
-      addName(nameObject)
+      addName(nameObject, newName)
     }
   }
 
@@ -47,25 +50,33 @@ const App = () => {
   }
 
   // add a function that confirms and update the existing number
-  const updateNumber = (person) => {
+  const updateNumber = (person, name) => {
     const id = person.id
     const changedInfo = {...person, number: newNumber}
 
     service 
-    .updateNumber(id, changedInfo)
+    .updateNumber(id, changedInfo, name)
     .then(returnedNumber => {
       setPersons(persons.map(person => person.id === id ? returnedNumber : person ))
       reset()
+      setMessage(`Updated ${name}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     })
   }
 
   // add a function that adds a new person to the list
-  const addName = (nameObject) => {
+  const addName = (nameObject, name) => {
     service
     .create(nameObject)
     .then(returnedName => {
       setPersons(prev => prev.concat(returnedName))
       reset()
+      setMessage(`Added ${name}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     })
   }
 
@@ -81,6 +92,10 @@ const App = () => {
       .deleteName(id)
       .then(() => {
         setPersons(persons.filter(n => n.id !== id))
+      setMessage(`Deleted ${name}`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
       })
     } else {
       return false
@@ -105,6 +120,7 @@ const App = () => {
   return (
     <div>
       <Header text='Phonebook' />
+      <Notification message={message} />
       <div>filter shown with <input value={filterName} onChange={handleFilter}/> </div>
       <Header text='Add new' />
       <form onSubmit={addInfo}>
