@@ -57,12 +57,23 @@ const randomId = (max) => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    if(!body.name) {
+    // n.name access persons array
+    // body.name access recent input
+    const name = persons.find(n => n.name === body.name)
+
+    if(!body.name || !body.number) {
         return response.status(400).json({
-            error: 'name missing'
+            error: 'input missing'
         })
     }
 
+    // if there is an existing name
+    if(name) {
+        return response.status(400).json({
+            error: 'name must be unique'
+        })
+    } 
+    
     const person = {
         id: randomId(500),
         name: body.name,
