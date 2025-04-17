@@ -10,9 +10,13 @@ const requestLogger = (request, response, next) => {
     next()
 }
 
+morgan.token('body', function getBody (request) {
+    return JSON.stringify(request.body)
+})
+
 app.use(express.json())
 app.use(requestLogger)
-app.use(morgan('combined'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
       {
