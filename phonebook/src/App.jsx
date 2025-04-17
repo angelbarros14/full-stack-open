@@ -64,6 +64,14 @@ const App = () => {
         setMessage(null)
       }, 5000)
     })
+    .catch(error => {
+      setMessage(`Information of ${name} has already been removed from the server`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+      setPersons(persons.filter(n => n.id !== id))
+      reset()
+    })
   }
 
   // add a function that adds a new person to the list
