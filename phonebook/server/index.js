@@ -53,14 +53,17 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const person = persons.find(n => n.id === id)
-
-    if (person) {
+    Note.findById(request.params.id).then(person => {
         response.json(person)
-    } else {
-        response.status(404).end()
-    }
+    })
+    // const id = request.params.id
+    // const person = persons.find(n => n.id === id)
+
+    // if (person) {
+    //     response.json(person)
+    // } else {
+    //     response.status(404).end()
+    // }
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -77,32 +80,45 @@ const randomId = (max) => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
-    // n.name access persons array
-    // body.name access recent input
-    const name = persons.find(n => n.name === body.name)
-
-    if(!body.name || !body.number) {
-        return response.status(400).json({
-            error: 'input missing'
-        })
+    if (!body.name || !body.number) {
+        return response.status(400).json({ error: 'name missing'})
     }
 
-    // if there is an existing name
-    if(name) {
-        return response.status(400).json({
-            error: 'name must be unique'
-        })
-    } 
-    
-    const person = {
-        id: randomId(500),
+    const person = new Person({
         name: body.name,
-        number: body.number,
-    }
+        number: body.number
+    })
 
-    persons = persons.concat(person)
-    console.log(persons)
-    response.json(person)
+    person.save().then(savedInfo => {
+        response.json(savedInfo)
+    })
+
+    // // n.name access persons array
+    // // body.name access recent input
+    // const name = persons.find(n => n.name === body.name)
+
+    // if(!body.name || !body.number) {
+    //     return response.status(400).json({
+    //         error: 'input missing'
+    //     })
+    // }
+
+    // // if there is an existing name
+    // if(name) {
+    //     return response.status(400).json({
+    //         error: 'name must be unique'
+    //     })
+    // } 
+    
+    // const person = {
+    //     id: randomId(500),
+    //     name: body.name,
+    //     number: body.number,
+    // }
+
+    // persons = persons.concat(person)
+    // console.log(persons)
+    // response.json(person)
 
 })
 
