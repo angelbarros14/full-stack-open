@@ -19,18 +19,13 @@ const App = () => {
     })
   }, [])
 
-  const addInfo = (event) => {1
+  const addInfo = (event) => {
     event.preventDefault()
     const nameObject = {
       name: newName,
       number: newNumber
     }   
-    
-    // if (newName === '') {
-    //   alert('Please enter a name')
-    //   return false
-    // }
-
+  
     const existing = existingName(newName, persons)
     if (existing) {
       if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
@@ -86,7 +81,10 @@ const App = () => {
         setMessage(null)
       }, 5000)
     })
-  }
+    .catch(error => {
+      setMessage(error.response.data.error)
+    })
+    }
 
   const reset = () => {
     setNewName('')
