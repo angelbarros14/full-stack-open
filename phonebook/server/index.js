@@ -96,21 +96,19 @@ const randomId = (max) => {
     return Math.floor(Math.random() * max)
 }
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
-
-    if (!body.name || !body.number) {
-        return response.status(400).json({ error: 'name missing'})
-    }
 
     const person = new Person({
         name: body.name,
         number: body.number
     })
 
-    person.save().then(savedInfo => {
+    person.save()
+        .then(savedInfo => {
         response.json(savedInfo)
     })
+    .catch(error => next(error))
 
     // // n.name access persons array
     // // body.name access recent input
@@ -172,7 +170,9 @@ const errorHandler = (error, request, response, next) => {
     console.log(error.message)
 
     if (error.name === 'CastError') {
-        return response.status(400).send({ error: 'malformatted id' })
+        return response.status(400).json({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message})
     }
     next(error)
 }

@@ -19,17 +19,17 @@ const App = () => {
     })
   }, [])
 
-  const addInfo = (event) => {
+  const addInfo = (event) => {1
     event.preventDefault()
     const nameObject = {
       name: newName,
       number: newNumber
     }   
     
-    if (newName === '') {
-      alert('Please enter a name')
-      return false
-    }
+    // if (newName === '') {
+    //   alert('Please enter a name')
+    //   return false
+    // }
 
     const existing = existingName(newName, persons)
     if (existing) {
