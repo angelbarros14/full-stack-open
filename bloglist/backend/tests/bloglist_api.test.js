@@ -36,7 +36,7 @@ test('verifies if the property is "id" not "_id"', async () => {
   assert.strictEqual(resultBlog.body._id, undefined)
 })
 
-test.only('a valid blog can be added', async () => {
+test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'blog one',
     author: 'a',
@@ -55,6 +55,24 @@ test.only('a valid blog can be added', async () => {
   assert.strictEqual(updatedListBlog.length, helper.blogs.length + 1)
 })
 
+test.only('set default to 0 if likes property is missing', async () => {
+  const newBlog = {
+    title: 'blog two',
+    author: 'a',
+    url: 'http://localhost:3003'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const updatedListBlog = await helper.blogsInDb()
+  const lastBlog = updatedListBlog[updatedListBlog.length - 1]
+  console.log('the last blog is:', lastBlog)
+  assert.strictEqual(lastBlog.likes, 0)
+})
 
 after(async () => {
   await mongoose.connection.close()
