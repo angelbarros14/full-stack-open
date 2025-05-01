@@ -74,7 +74,7 @@ test('set default to 0 if likes property is missing', async () => {
   assert.strictEqual(lastBlog.likes, 0)
 })
 
-test.only('blog with missing properties are not added', async () => {
+test('blog with missing properties are not added', async () => {
   const newBlog = {
     author: 'a',
     likes: 1
@@ -87,6 +87,19 @@ test.only('blog with missing properties are not added', async () => {
 
   const updatedListBlog = await helper.blogsInDb()
   assert.strictEqual(updatedListBlog.length, helper.blogs.length)
+})
+
+test.only('a blog can be deleted', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  console.log('this is the blogs before:', blogsAtStart)
+  const blogtoDelete = blogsAtStart[0]
+
+  await api.delete(`/api/blogs/${blogtoDelete.id}`).expect(204)
+  const blogsAtEnd = await helper.blogsInDb()
+  console.log('this is the blogs after:', blogsAtEnd)
+  const ids = blogsAtEnd.map(n => n.id)
+  assert(!ids.includes(blogtoDelete.id))
+  assert.strictEqual(blogsAtEnd.length, helper.blogs.length - 1)
 })
 
 after(async () => {
