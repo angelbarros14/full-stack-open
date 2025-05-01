@@ -89,7 +89,26 @@ test('blog with missing properties are not added', async () => {
   assert.strictEqual(updatedListBlog.length, helper.blogs.length)
 })
 
-test.only('a blog can be deleted', async () => {
+test.only('a blog can update number of likes', async () => {
+  const blogAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogAtStart[0]
+
+  const updatedData = {
+    ...blogToUpdate,
+    likes: blogToUpdate.likes + 10
+  }
+
+  const response = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedData)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  assert.strictEqual(response.body.likes, updatedData.likes)
+})
+
+
+test('a blog can be deleted', async () => {
   const blogsAtStart = await helper.blogsInDb()
   console.log('this is the blogs before:', blogsAtStart)
   const blogtoDelete = blogsAtStart[0]
