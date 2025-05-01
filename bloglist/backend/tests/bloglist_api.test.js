@@ -55,7 +55,7 @@ test('a valid blog can be added', async () => {
   assert.strictEqual(updatedListBlog.length, helper.blogs.length + 1)
 })
 
-test.only('set default to 0 if likes property is missing', async () => {
+test('set default to 0 if likes property is missing', async () => {
   const newBlog = {
     title: 'blog two',
     author: 'a',
@@ -72,6 +72,21 @@ test.only('set default to 0 if likes property is missing', async () => {
   const lastBlog = updatedListBlog[updatedListBlog.length - 1]
   console.log('the last blog is:', lastBlog)
   assert.strictEqual(lastBlog.likes, 0)
+})
+
+test.only('blog with missing properties are not added', async () => {
+  const newBlog = {
+    author: 'a',
+    likes: 1
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const updatedListBlog = await helper.blogsInDb()
+  assert.strictEqual(updatedListBlog.length, helper.blogs.length)
 })
 
 after(async () => {
